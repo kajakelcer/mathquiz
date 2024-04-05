@@ -3,12 +3,15 @@ package com.example.mathapp;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -16,15 +19,15 @@ import java.util.Random;
 
 public class mainScene extends test{
     public static int points = 0; // Track the user's points
-    private TextField numberField;
-    private TextField equationField; // To display the equation
-    private TextField scoreField;
-    private Random random = new Random();
+    public TextField numberField;
+     TextField equationField; // To display the equation
+    public TextField scoreField;
+    public Random random = new Random();
 
     public String userName = getUserName();
-    private Timeline timeline;
-    private Label timerLabel;
-    private Integer timeSeconds = 30;
+    public Timeline timeline;
+    public Label timerLabel;
+    public Integer timeSeconds = 30;
 
     public mainScene(){
 
@@ -48,10 +51,24 @@ public class mainScene extends test{
         scoreField = new TextField();
         scoreField.setText("Your Score: ");
 
+        BackgroundFill backgroundFill = new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY);
+        Background background = new Background(backgroundFill);
+        root.setBackground(background);
+
 
         TextField username = new TextField();
         username.setEditable(false);
         username.setText(name);
+
+        TextField numericTextField = new TextField();
+
+        // Add an EventFilter to only allow numeric input
+        numericTextField.addEventFilter(KeyEvent.KEY_TYPED, event -> {
+            if (!event.getCharacter().matches("\\d")) { // "\\d" is the regex for digits
+                event.consume(); // Consume the event if it's not a digit
+            }
+        });
+
 
         TextField timeField = new TextField();
         timeField.setEditable(false);
@@ -61,6 +78,13 @@ public class mainScene extends test{
 
         Button endButton = new Button("Exit Game");
         endButton.setOnAction(e -> Platform.exit());
+
+        Button clearButton = new Button("Clear");
+        clearButton.setOnAction(e ->{
+            numberField.clear();
+        });
+        clearButton.setLayoutX(2);
+        clearButton.setLayoutY(100);
 
         Button saveButton = new Button("Save score");
         saveButton.setOnAction(event -> {
@@ -84,8 +108,14 @@ public class mainScene extends test{
                     if(timeSeconds <= 0){
                         timeline.stop();
                     }
+                    if(timeSeconds == 0){
+                        endButton.fire();
+                        saveButton.fire();
+                    }
                 }));
         timeline.playFromStart();
+
+
 
 
 
@@ -93,24 +123,32 @@ public class mainScene extends test{
         numberButtons.setAlignment(Pos.CENTER);
         for (int i = 0; i <= 9; i++) { // Create buttons for numbers 0-9
             Button btn = new Button(String.valueOf(i));
-            btn.setOnAction(e -> numberField.appendText(btn.getText()));
+            btn.setOnAction(e -> numericTextField.appendText(btn.getText()));
             numberButtons.getChildren().add(btn);
         }
 
         Button submitButton = new Button("Check Answer");
         submitButton.setOnAction(e -> {
-            if (!numberField.getText().isEmpty()) {
-                int userAnswer = Integer.parseInt(numberField.getText());
+            if (!numericTextField.getText().isEmpty()) {
+                int userAnswer = Integer.parseInt(numericTextField.getText());
                 checkAnswer(userAnswer);
-                numberField.clear(); // Clear the field after submission
+                numericTextField.clear(); // Clear the field after submission
                 generateEquation(); // Generate a new equation after each submission
             }
         });
+        root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                submitButton.fire();// Programmatically fire the button's action
+                event.consume(); // Consume the event to prevent it from propagating further
+            }
+        });
 
-        root.getChildren().addAll(username, equationField, numberField, scoreField, numberButtons, submitButton,saveButton, endButton,timerLabel);
+
+        root.getChildren().addAll(username, equationField, numericTextField, scoreField, numberButtons, submitButton, clearButton, endButton,timerLabel);
         generateEquation(); // Initial equation generation
 
-
+        Platform.runLater(numericTextField::requestFocus);
+        root.getStylesheets().add("style.css");
         return root;
     }
     private void checkAnswer(int userAnswer) {
@@ -166,6 +204,11 @@ public class mainScene extends test{
     public void setPoints(int points){
         this.points = points;
     }
-
+    public int getTimeSeconds(){
+        return timeSeconds;
+    }
+    public void setTimeSeconds(int timeSeconds){
+        this.timeSeconds = timeSeconds;
+    }
 
 }

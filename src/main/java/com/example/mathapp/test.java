@@ -1,15 +1,15 @@
 package com.example.mathapp;
 
-import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class test extends Application {
         public static String userName;
@@ -22,16 +22,27 @@ public class test extends Application {
             TextField usernameField = new TextField();
             usernameField.setPromptText("Enter your username");
 
+            int time = root2.getTimeSeconds();
+            if(time == 0){
+                secondaryStage.close();
+            }
 
 
             Button startButton = new Button("Start Game");
             startButton.setOnAction(e -> {
                 userName = usernameField.getText().trim();
-                Scene scene2 = new Scene(root2.retuRnRoot(userName), 300, 300);
+                Scene scene2 = new Scene(root2.retuRnRoot(userName), 400, 400);
                 secondaryStage.setTitle("Math Quiz");
                 secondaryStage.setScene(scene2);
                 secondaryStage.show();
             });
+            root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    startButton.fire(); // Programmatically fire the button's action
+                    event.consume(); // Consume the event to prevent it from propagating further
+                }
+            });
+
 
             root.getChildren().addAll(new Label("Username:"), usernameField, startButton);
 
@@ -42,20 +53,17 @@ public class test extends Application {
 
 
         }
-        public static String getUserName(){
+
+
+    public static String getUserName(){
             return userName;
         }
         public void setUserName(String userName){
             this.userName = userName;
         }
-        public void timeLimit(Stage secondaryStage){
-            PauseTransition delay = new PauseTransition(Duration.seconds(30));
-            delay.setOnFinished( event -> secondaryStage.close() );
-            delay.play();
-
-        }
 
         public static void main(String[] args) {
             launch(args);
         }
+
     }
