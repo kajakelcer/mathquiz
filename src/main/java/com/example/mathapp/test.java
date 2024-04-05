@@ -1,4 +1,6 @@
 package com.example.mathapp;
+
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -7,7 +9,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-    public class test extends Application {
+import javafx.util.Duration;
+
+public class test extends Application {
         public static String userName;
 
         public void start(Stage secondaryStage) {
@@ -17,6 +21,8 @@ import javafx.stage.Stage;
 
             TextField usernameField = new TextField();
             usernameField.setPromptText("Enter your username");
+
+
 
             Button startButton = new Button("Start Game");
             startButton.setOnAction(e -> {
@@ -33,12 +39,20 @@ import javafx.stage.Stage;
             secondaryStage.setTitle("Start Menu");
             secondaryStage.setScene(scene);
             secondaryStage.show();
+
+
         }
         public static String getUserName(){
             return userName;
         }
         public void setUserName(String userName){
             this.userName = userName;
+        }
+        public void timeLimit(Stage secondaryStage){
+            PauseTransition delay = new PauseTransition(Duration.seconds(30));
+            delay.setOnFinished( event -> secondaryStage.close() );
+            delay.play();
+
         }
 
         public static void main(String[] args) {

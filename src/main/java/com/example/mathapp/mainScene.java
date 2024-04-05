@@ -1,11 +1,15 @@
 package com.example.mathapp;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.Random;
@@ -18,10 +22,16 @@ public class mainScene extends test{
     private Random random = new Random();
 
     public String userName = getUserName();
+    private Timeline timeline;
+    private Label timerLabel;
+    private Integer timeSeconds = 30;
 
     public mainScene(){
 
     }
+    public void timer(){
+    }
+
     public VBox retuRnRoot(String name){
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
@@ -43,6 +53,12 @@ public class mainScene extends test{
         username.setEditable(false);
         username.setText(name);
 
+        TextField timeField = new TextField();
+        timeField.setEditable(false);
+        timeField.setText("30 sec game time");
+        timeField.snapPositionX(0);
+        timeField.setMaxWidth(50);
+
         Button endButton = new Button("Exit Game");
         endButton.setOnAction(e -> Platform.exit());
 
@@ -54,6 +70,22 @@ public class mainScene extends test{
                 throw new RuntimeException(e);
             }
         });
+
+
+        timerLabel = new Label();
+        timerLabel.setText("Time remaining:" + timeSeconds.toString());
+        timerLabel.setStyle("-fx-font-size: 40;");
+        timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.getKeyFrames().add(
+                new KeyFrame(Duration.seconds(1), event -> {
+                    timeSeconds--;
+                    timerLabel.setText(timeSeconds.toString());
+                    if(timeSeconds <= 0){
+                        timeline.stop();
+                    }
+                }));
+        timeline.playFromStart();
 
 
 
@@ -75,7 +107,7 @@ public class mainScene extends test{
             }
         });
 
-        root.getChildren().addAll(username, equationField, numberField, scoreField, numberButtons, submitButton,saveButton, endButton);
+        root.getChildren().addAll(username, equationField, numberField, scoreField, numberButtons, submitButton,saveButton, endButton,timerLabel);
         generateEquation(); // Initial equation generation
 
 
@@ -134,5 +166,6 @@ public class mainScene extends test{
     public void setPoints(int points){
         this.points = points;
     }
+
 
 }
