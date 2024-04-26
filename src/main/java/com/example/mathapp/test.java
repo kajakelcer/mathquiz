@@ -18,7 +18,6 @@ public class test extends Application {
             mainScene root2 = new mainScene();
             VBox root = new VBox(10);
             root.setAlignment(Pos.CENTER);
-
             TextField usernameField = new TextField();
             usernameField.setPromptText("Enter your username");
 
@@ -26,7 +25,6 @@ public class test extends Application {
             if(time == 0){
                 secondaryStage.close();
             }
-
 
             Button startButton = new Button("Start Game");
             startButton.setOnAction(e -> {
@@ -43,17 +41,13 @@ public class test extends Application {
                 }
             });
 
-
             root.getChildren().addAll(new Label("Username:"), usernameField, startButton);
 
             Scene scene = new Scene(root, 300, 200);
             secondaryStage.setTitle("Start Menu");
             secondaryStage.setScene(scene);
             secondaryStage.show();
-
-
         }
-
 
     public static String getUserName(){
             return userName;
@@ -61,9 +55,7 @@ public class test extends Application {
         public void setUserName(String userName){
             this.userName = userName;
         }
-
         public static void main(String[] args) {
             launch(args);
         }
-
     }

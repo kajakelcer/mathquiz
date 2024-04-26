@@ -23,14 +23,12 @@ public class mainScene extends test{
      TextField equationField; // To display the equation
     public TextField scoreField;
     public Random random = new Random();
-
     public String userName = getUserName();
     public Timeline timeline;
     public Label timerLabel;
     public Integer timeSeconds = 30;
 
     public mainScene(){
-
     }
     public void timer(){
     }
@@ -38,7 +36,6 @@ public class mainScene extends test{
     public VBox retuRnRoot(String name){
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
-
 
         equationField = new TextField();
         equationField.setEditable(false);
@@ -55,20 +52,17 @@ public class mainScene extends test{
         Background background = new Background(backgroundFill);
         root.setBackground(background);
 
-
         TextField username = new TextField();
         username.setEditable(false);
         username.setText(name);
 
         TextField numericTextField = new TextField();
 
-        // Add an EventFilter to only allow numeric input
         numericTextField.addEventFilter(KeyEvent.KEY_TYPED, event -> {
-            if (!event.getCharacter().matches("\\d")) { // "\\d" is the regex for digits
-                event.consume(); // Consume the event if it's not a digit
+            if (!event.getCharacter().matches("\\d")) {
+                event.consume();
             }
         });
-
 
         TextField timeField = new TextField();
         timeField.setEditable(false);
@@ -95,7 +89,6 @@ public class mainScene extends test{
             }
         });
 
-
         timerLabel = new Label();
         timerLabel.setText("Time remaining:" + timeSeconds.toString());
         timerLabel.setStyle("-fx-font-size: 40;");
@@ -115,10 +108,6 @@ public class mainScene extends test{
                 }));
         timeline.playFromStart();
 
-
-
-
-
         HBox numberButtons = new HBox(5);
         numberButtons.setAlignment(Pos.CENTER);
         for (int i = 0; i <= 9; i++) { // Create buttons for numbers 0-9
@@ -126,7 +115,6 @@ public class mainScene extends test{
             btn.setOnAction(e -> numericTextField.appendText(btn.getText()));
             numberButtons.getChildren().add(btn);
         }
-
         Button submitButton = new Button("Check Answer");
         submitButton.setOnAction(e -> {
             if (!numericTextField.getText().isEmpty()) {
@@ -142,7 +130,6 @@ public class mainScene extends test{
                 event.consume(); // Consume the event to prevent it from propagating further
             }
         });
-
 
         root.getChildren().addAll(username, equationField, numericTextField, scoreField, numberButtons, submitButton, clearButton, endButton,timerLabel);
         generateEquation(); // Initial equation generation
