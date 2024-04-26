@@ -18,9 +18,9 @@ import java.io.IOException;
 import java.util.Random;
 
 public class mainScene extends test{
-    public static int points = 0; // Track the user's points
+    public static int points = 0;
     public TextField numberField;
-     TextField equationField; // To display the equation
+     TextField equationField;
     public TextField scoreField;
     public Random random = new Random();
     public String userName = getUserName();
@@ -73,13 +73,6 @@ public class mainScene extends test{
         Button endButton = new Button("Exit Game");
         endButton.setOnAction(e -> Platform.exit());
 
-        Button clearButton = new Button("Clear");
-        clearButton.setOnAction(e ->{
-            numberField.clear();
-        });
-        clearButton.setLayoutX(2);
-        clearButton.setLayoutY(100);
-
         Button saveButton = new Button("Save score");
         saveButton.setOnAction(event -> {
             try {
@@ -110,7 +103,7 @@ public class mainScene extends test{
 
         HBox numberButtons = new HBox(5);
         numberButtons.setAlignment(Pos.CENTER);
-        for (int i = 0; i <= 9; i++) { // Create buttons for numbers 0-9
+        for (int i = 0; i <= 9; i++) {
             Button btn = new Button(String.valueOf(i));
             btn.setOnAction(e -> numericTextField.appendText(btn.getText()));
             numberButtons.getChildren().add(btn);
@@ -120,19 +113,19 @@ public class mainScene extends test{
             if (!numericTextField.getText().isEmpty()) {
                 int userAnswer = Integer.parseInt(numericTextField.getText());
                 checkAnswer(userAnswer);
-                numericTextField.clear(); // Clear the field after submission
-                generateEquation(); // Generate a new equation after each submission
+                numericTextField.clear();
+                generateEquation();
             }
         });
         root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                submitButton.fire();// Programmatically fire the button's action
-                event.consume(); // Consume the event to prevent it from propagating further
+                submitButton.fire();
+                event.consume();
             }
         });
 
-        root.getChildren().addAll(username, equationField, numericTextField, scoreField, numberButtons, submitButton, clearButton, endButton,timerLabel);
-        generateEquation(); // Initial equation generation
+        root.getChildren().addAll(username, equationField, numericTextField, scoreField, numberButtons, submitButton, endButton,timerLabel);
+        generateEquation();
 
         Platform.runLater(numericTextField::requestFocus);
         root.getStylesheets().add("style.css");
@@ -148,7 +141,7 @@ public class mainScene extends test{
             case "+" -> num1 + num2;
             case "-" -> num1 - num2;
             case "*" -> num1 * num2;
-            default -> 0; // Default case should not happen
+            default -> 0;
         };
 
         if (userAnswer == correctAnswer) {
@@ -162,19 +155,19 @@ public class mainScene extends test{
     }
 
     private void generateEquation() {
-        int operation = random.nextInt(3); // 0: add, 1: subtract, 2: multiply
+        int operation = random.nextInt(3);
         String operator = switch (operation) {
             case 0 -> "+";
             case 1 -> "-";
             case 2 -> "*";
-            default -> "+"; // Default case should not happen
+            default -> "+";
         };
         int num1, num2, numChange;
 
-        if (operation == 2) { // If operation is multiplication
-            num1 = random.nextInt(10) + 1; // 1 to 10
-            num2 = random.nextInt(10) + 1; // 1 to 10
-        } else { // For addition and subtraction
+        if (operation == 2) {
+            num1 = random.nextInt(10) + 1;
+            num2 = random.nextInt(10) + 1;
+        } else {
             num1 = random.nextInt(41);
             num2 = random.nextInt(41);
         }

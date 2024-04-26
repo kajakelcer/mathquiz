@@ -36,8 +36,8 @@ public class test extends Application {
             });
             root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
                 if (event.getCode() == KeyCode.ENTER) {
-                    startButton.fire(); // Programmatically fire the button's action
-                    event.consume(); // Consume the event to prevent it from propagating further
+                    startButton.fire();
+                    event.consume();
                 }
             });
 
